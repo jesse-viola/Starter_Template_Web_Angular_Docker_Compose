@@ -83,17 +83,17 @@ export class Header {
   ];
 
   // todo add the auth service
-  public isLoggedIn = true;
+  public isLoggedIn = false;
   public isMobileMenuOpen = false;
 
 
   onSearchChange(searchTerm: string) {
-    // console.log('Search changed:', searchTerm);
+    console.log('Search changed:', searchTerm);
     // Implement your search logic here
   }
 
   onSearchSubmit(searchTerm: string) {
-    // console.log('Search submitted:', searchTerm);
+    console.log('Search submitted:', searchTerm);
     // Implement your search submission logic here
   }
 
@@ -127,5 +127,18 @@ export class Header {
       data: { suggestions: this.searchSuggestions },
       panelClass: 'mobile-search-bottom-sheet'
     });
+  }
+
+  handleLogin(result: { provider: string; success: boolean; data?: any }) {
+    console.log('Login successful:', result);
+    
+    if (result.success) {
+      // Update login state
+      this.isLoggedIn = true;
+      
+      // Here you would typically call your auth service
+      // this.authService.setUser(result.data);
+      // this.router.navigate(['/dashboard']);
+    }
   }
 }

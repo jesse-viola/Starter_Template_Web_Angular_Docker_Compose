@@ -61,13 +61,16 @@
         <mat-icon>menu</mat-icon>
       </button>
 
-      @if (isLoggedIn) {
-        <app-login-button class="login-profile-area"></app-login-button>
+      @if (!isLoggedIn) {
+        <app-login-button 
+          class="login-profile-area"
+          (onLogin)="handleLogin($event)">
+        </app-login-button>
       } @else {
-      <!-- Avatar -->
-      <div class="avatar-container login-profile-area">
-        <img src="assets/avatar.png" alt="Profile" class="avatar-image" />
-      </div>
+        <!-- Avatar -->
+        <div class="avatar-container login-profile-area">
+          <img src="assets/avatar.png" alt="Profile" class="avatar-image" />
+        </div>
       }
     </div>
   </div>

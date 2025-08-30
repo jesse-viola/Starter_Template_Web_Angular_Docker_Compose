@@ -1,9 +1,9 @@
 <app-custom-button
   variant="primary"
   size="small"
-  [loading]="isLoading"
-  [disabled]="disabled"
-  [fullWidth]="fullWidth"
+  [loading]="isLoading()"
+  [disabled]="disabled()"
+  [fullWidth]="fullWidth()"
   (onClick)="handleLogin()">
   Login
 </app-custom-button>

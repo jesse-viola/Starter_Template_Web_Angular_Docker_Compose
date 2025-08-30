@@ -6,3 +6,59 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   overflow-x: hidden;
 }
+
+/* ===== MODAL GLOBAL STYLES ===== */
+.login-modal-panel {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  
+  .cdk-overlay-pane {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+  
+  .mat-mdc-dialog-container {
+    padding: 0 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+    margin: auto !important;
+    position: relative !important;
+    transform: none !important;
+    
+    @media (max-width: 768px) {
+      border-radius: 12px !important;
+      margin: 16px !important;
+      width: calc(100vw - 32px) !important;
+      max-width: calc(100vw - 32px) !important;
+    }
+    
+    @media (max-width: 480px) {
+      border-radius: 8px !important;
+      margin: 8px !important;
+      width: calc(100vw - 16px) !important;
+      max-width: calc(100vw - 16px) !important;
+    }
+  }
+  
+  .mat-mdc-dialog-surface {
+    border-radius: inherit !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    max-width: 440px !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* ===== BACKDROP OVERLAY ===== */
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
