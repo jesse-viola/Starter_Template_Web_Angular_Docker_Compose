@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { YarnCard } from '../yarn-card/yarn-card';
 
@@ -13,7 +13,8 @@ interface Yarn {
   standalone: true,
   imports: [CommonModule, YarnCard],
   templateUrl: './featured-yarns.html',
-  styleUrl: './featured-yarns.scss'
+  styleUrl: './featured-yarns.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FeaturedYarns {
   featuredYarns: Yarn[] = [

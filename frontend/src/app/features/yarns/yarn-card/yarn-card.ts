@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './yarn-card.html',
-  styleUrl: './yarn-card.scss'
+  styleUrl: './yarn-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class YarnCard {
-  @Input() title: string = '';
-  @Input() description: string = '';
-  @Input() imageUrl: string = '';
+  readonly title = input<string>('');
+  readonly description = input<string>('');
+  readonly imageUrl = input<string>('');
 }

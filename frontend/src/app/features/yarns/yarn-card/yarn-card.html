@@ -1,9 +1,9 @@
 <div class="yarn-card">
   <div class="yarn-image-container">
-    <img [src]="imageUrl" [alt]="title" class="yarn-image" />
+    <img [src]="imageUrl()" [alt]="title()" class="yarn-image" />
   </div>
   <div class="yarn-content">
-    <h3 class="yarn-title">{{ title }}</h3>
-    <p class="yarn-description">{{ description }}</p>
+    <h3 class="yarn-title">{{ title() }}</h3>
+    <p class="yarn-description">{{ description() }}</p>
   </div>
 </div>

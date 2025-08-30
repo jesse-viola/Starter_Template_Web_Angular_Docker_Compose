@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,8 +25,11 @@ import { MobileSearchSheet } from '../mobile-search/mobile-search';
   ],
   templateUrl: './header.html',
   styleUrl: './header.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Header {
+  private bottomSheet = inject(MatBottomSheet);
+  
   // 🔍 SAMPLE SUGGESTIONS: Mock data for demonstration
   searchSuggestions: SearchSuggestion[] = [
     {
@@ -83,7 +86,6 @@ export class Header {
   public isLoggedIn = true;
   public isMobileMenuOpen = false;
 
-  constructor(private bottomSheet: MatBottomSheet) {}
 
   onSearchChange(searchTerm: string) {
     // console.log('Search changed:', searchTerm);

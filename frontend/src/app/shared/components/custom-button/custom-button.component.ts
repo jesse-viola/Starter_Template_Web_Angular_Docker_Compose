@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,32 +11,33 @@ export type ButtonSize = 'small' | 'medium' | 'large';
   standalone: true,
   imports: [CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './custom-button.component.html',
-  styleUrl: './custom-button.component.scss'
+  styleUrl: './custom-button.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomButtonComponent {
-  @Input() variant: ButtonVariant = 'primary';
-  @Input() size: ButtonSize = 'medium';
-  @Input() disabled: boolean = false;
-  @Input() loading: boolean = false;
-  @Input() fullWidth: boolean = false;
-  @Input() icon?: string;
-  @Input() iconPosition: 'left' | 'right' = 'left';
-  @Input() type: 'button' | 'submit' | 'reset' = 'button';
+  readonly variant = input<ButtonVariant>('primary');
+  readonly size = input<ButtonSize>('medium');
+  readonly disabled = input(false);
+  readonly loading = input(false);
+  readonly fullWidth = input(false);
+  readonly icon = input<string>();
+  readonly iconPosition = input<'left' | 'right'>('left');
+  readonly type = input<'button' | 'submit' | 'reset'>('button');
 
-  @Output() onClick = new EventEmitter<Event>();
+  onClick = output<Event>();
 
-  get buttonClasses(): string {
+  buttonClasses = computed(() => {
     return [
       'custom-btn',
-      `custom-btn--${this.variant}`,
-      `custom-btn--${this.size}`,
-      this.fullWidth ? 'custom-btn--full-width' : '',
-      this.loading ? 'custom-btn--loading' : ''
+      `custom-btn--${this.variant()}`,
+      `custom-btn--${this.size()}`,
+      this.fullWidth() ? 'custom-btn--full-width' : '',
+      this.loading() ? 'custom-btn--loading' : ''
     ].filter(Boolean).join(' ');
-  }
+  });
 
-  get materialButtonType(): string {
-    switch (this.variant) {
+  materialButtonType = computed(() => {
+    switch (this.variant()) {
       case 'primary':
         return 'mat-raised-button';
       case 'secondary':
@@ -46,10 +47,10 @@ export class CustomButtonComponent {
       default:
         return 'mat-raised-button';
     }
-  }
+  });
 
   handleClick(event: Event): void {
-    if (!this.disabled && !this.loading) {
+    if (!this.disabled() && !this.loading()) {
       this.onClick.emit(event);
     }
   }

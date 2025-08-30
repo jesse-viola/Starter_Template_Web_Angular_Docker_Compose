@@ -1,11 +1,11 @@
-@switch (variant) {
+@switch (variant()) {
   <!-- Primary button -->
   @case ('primary') {
     <button 
       mat-raised-button
-      [ngClass]="buttonClasses"
-      [disabled]="disabled || loading"
-      [type]="type"
+      [ngClass]="buttonClasses()"
+      [disabled]="disabled() || loading()"
+      [type]="type()"
       (click)="handleClick($event)">
       <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
     </button>
@@ -15,9 +15,9 @@
   @case ('secondary') {
     <button 
       mat-stroked-button
-      [ngClass]="buttonClasses"
-      [disabled]="disabled || loading"
-      [type]="type"
+      [ngClass]="buttonClasses()"
+      [disabled]="disabled() || loading()"
+      [type]="type()"
       (click)="handleClick($event)">
       <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
     </button>
@@ -27,9 +27,9 @@
   @default {
     <button 
       mat-button
-      [ngClass]="buttonClasses"
-      [disabled]="disabled || loading"
-      [type]="type"
+      [ngClass]="buttonClasses()"
+      [disabled]="disabled() || loading()"
+      [type]="type()"
       (click)="handleClick($event)">
       <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
     </button>
@@ -39,26 +39,26 @@
 <!-- Button content template -->
 <ng-template #buttonContent>
   <!-- Loading spinner -->
-  @if (loading) {
+  @if (loading()) {
     <mat-icon class="loading-spinner">refresh</mat-icon>
   }
   
   <!-- Left icon -->
-  @if (icon && iconPosition === 'left' && !loading) {
+  @if (icon() && iconPosition() === 'left' && !loading()) {
     <mat-icon class="button-icon button-icon--left">
-      {{ icon }}
+      {{ icon() }}
     </mat-icon>
   }
   
   <!-- Button content -->
-  <span class="button-content" [class.sr-only]="loading">
+  <span class="button-content" [class.sr-only]="loading()">
     <ng-content></ng-content>
   </span>
   
   <!-- Right icon -->
-  @if (icon && iconPosition === 'right' && !loading) {
+  @if (icon() && iconPosition() === 'right' && !loading()) {
     <mat-icon class="button-icon button-icon--right">
-      {{ icon }}
+      {{ icon() }}
     </mat-icon>
   }
 </ng-template>
