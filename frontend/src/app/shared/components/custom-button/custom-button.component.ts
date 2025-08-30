@@ -12,7 +12,7 @@ export type ButtonSize = 'small' | 'medium' | 'large';
   imports: [CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './custom-button.component.html',
   styleUrl: './custom-button.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
@@ -24,7 +24,7 @@ export class CustomButtonComponent {
   readonly iconPosition = input<'left' | 'right'>('left');
   readonly type = input<'button' | 'submit' | 'reset'>('button');
 
-  onClick = output<Event>();
+  buttonClick = output<Event>();
 
   buttonClasses = computed(() => {
     return [
@@ -32,8 +32,10 @@ export class CustomButtonComponent {
       `custom-btn--${this.variant()}`,
       `custom-btn--${this.size()}`,
       this.fullWidth() ? 'custom-btn--full-width' : '',
-      this.loading() ? 'custom-btn--loading' : ''
-    ].filter(Boolean).join(' ');
+      this.loading() ? 'custom-btn--loading' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
   });
 
   materialButtonType = computed(() => {
@@ -51,7 +53,7 @@ export class CustomButtonComponent {
 
   handleClick(event: Event): void {
     if (!this.disabled() && !this.loading()) {
-      this.onClick.emit(event);
+      this.buttonClick.emit(event);
     }
   }
 }

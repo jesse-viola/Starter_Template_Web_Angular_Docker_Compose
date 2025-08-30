@@ -9,16 +9,17 @@ import { LoginModalComponent } from '../login-modal/login-modal.component';
   imports: [CustomButtonComponent],
   templateUrl: './login-button.html',
   styleUrl: './login-button.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginButton {
   private dialog = inject(MatDialog);
-  
+
   readonly isLoading = input(false);
   readonly disabled = input(false);
   readonly fullWidth = input(false);
-  
-  onLogin = output<{ provider: string; success: boolean; data?: any }>();
+
+  // TODO: Define proper type for login result
+  loginResult = output<{ provider: string; success: boolean; data?: unknown }>();
 
   handleLogin(): void {
     if (!this.isLoading() && !this.disabled()) {
@@ -36,17 +37,17 @@ export class LoginButton {
       backdropClass: 'login-modal-backdrop',
       position: {
         top: '0',
-        left: '0'
+        left: '0',
       },
       width: '100vw',
       height: '100vh',
       maxWidth: 'none',
-      maxHeight: 'none'
+      maxHeight: 'none',
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.success) {
-        this.onLogin.emit(result);
+        this.loginResult.emit(result);
       } else if (result && result.action === 'signup') {
         // Handle signup redirect
         console.log('User wants to sign up');

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,9 +17,9 @@ import { SearchBar, SearchSuggestion } from '../search-bar/search-bar';
           <mat-icon>close</mat-icon>
         </button>
       </div>
-      
+
       <div class="search-sheet-content">
-        <search-bar
+        <app-search-bar
           placeholder="Search patterns, yarns, and more..."
           appearance="outline"
           [debounceMs]="300"
@@ -31,48 +31,48 @@ import { SearchBar, SearchSuggestion } from '../search-bar/search-bar';
           (suggestionSelected)="onSuggestionSelected($event)"
           class="mobile-search-input"
         >
-        </search-bar>
+        </app-search-bar>
       </div>
     </div>
   `,
-  styles: [`
-    .mobile-search-sheet {
-      padding: 16px;
-      min-height: 200px;
-    }
-
-    .search-sheet-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-
-      h3 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--mat-text-primary, #333);
+  styles: [
+    `
+      .mobile-search-sheet {
+        padding: 16px;
+        min-height: 200px;
       }
-    }
 
-    .search-sheet-content {
-      .mobile-search-input {
-        width: 100%;
+      .search-sheet-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        h3 {
+          margin: 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--mat-text-primary, #333);
+        }
       }
-    }
-  `]
+
+      .search-sheet-content {
+        .mobile-search-input {
+          width: 100%;
+        }
+      }
+    `,
+  ],
 })
 export class MobileSearchSheet {
-  constructor(
-    private bottomSheetRef: MatBottomSheetRef<MobileSearchSheet>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: { suggestions: SearchSuggestion[] }
-  ) {}
+  private bottomSheetRef = inject(MatBottomSheetRef<MobileSearchSheet>);
+  public data = inject(MAT_BOTTOM_SHEET_DATA) as { suggestions: SearchSuggestion[] };
 
   close() {
     this.bottomSheetRef.dismiss();
   }
 
-  onSearchChange(searchTerm: string) {
+  onSearchChange() {
     // Handle search change
   }
 

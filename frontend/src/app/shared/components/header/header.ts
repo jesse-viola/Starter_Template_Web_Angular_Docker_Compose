@@ -25,11 +25,11 @@ import { MobileSearchSheet } from '../mobile-search/mobile-search';
   ],
   templateUrl: './header.html',
   styleUrl: './header.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
   private bottomSheet = inject(MatBottomSheet);
-  
+
   // 🔍 SAMPLE SUGGESTIONS: Mock data for demonstration
   searchSuggestions: SearchSuggestion[] = [
     {
@@ -86,7 +86,6 @@ export class Header {
   public isLoggedIn = false;
   public isMobileMenuOpen = false;
 
-
   onSearchChange(searchTerm: string) {
     console.log('Search changed:', searchTerm);
     // Implement your search logic here
@@ -125,17 +124,18 @@ export class Header {
   toggleSearch() {
     this.bottomSheet.open(MobileSearchSheet, {
       data: { suggestions: this.searchSuggestions },
-      panelClass: 'mobile-search-bottom-sheet'
+      panelClass: 'mobile-search-bottom-sheet',
     });
   }
 
-  handleLogin(result: { provider: string; success: boolean; data?: any }) {
+  // TODO: Define proper type for login result
+  handleLogin(result: { provider: string; success: boolean; data?: unknown }) {
     console.log('Login successful:', result);
-    
+
     if (result.success) {
       // Update login state
       this.isLoggedIn = true;
-      
+
       // Here you would typically call your auth service
       // this.authService.setUser(result.data);
       // this.router.navigate(['/dashboard']);

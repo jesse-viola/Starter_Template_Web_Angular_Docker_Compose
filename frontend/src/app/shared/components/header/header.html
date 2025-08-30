@@ -23,7 +23,7 @@
 
     <!-- Search - Desktop/Tablet -->
     <div class="search-container show-desktop">
-      <search-bar
+      <app-search-bar
         placeholder="Search patterns, yarns, and more..."
         appearance="outline"
         [debounceMs]="300"
@@ -37,7 +37,7 @@
         (mouseLeft)="onMouseLeft()"
         (suggestionSelected)="onSuggestionSelected($event)"
       >
-      </search-bar>
+      </app-search-bar>
     </div>
 
     <!-- Right side actions -->

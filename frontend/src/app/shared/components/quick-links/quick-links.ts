@@ -2,10 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-quick-links',
-  standalone: false,
+  standalone: true,
   templateUrl: './quick-links.html',
-  styleUrl: './quick-links.scss'
+  styleUrl: './quick-links.scss',
 })
-export class QuickLinks {
-
-}
+export class QuickLinks {}

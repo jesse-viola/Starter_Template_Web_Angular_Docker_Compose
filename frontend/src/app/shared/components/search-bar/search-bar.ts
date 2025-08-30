@@ -38,7 +38,7 @@ export interface SearchSuggestion {
 }
 
 @Component({
-  selector: 'search-bar',
+  selector: 'app-search-bar',
   standalone: true,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
