@@ -1,10 +1,11 @@
-<!-- 🎯 LEARNING OBJECTIVE: Angular Template Syntax & Material UI Integration -->
+<!-- 🎯 MODERNIZED ANGULAR TEMPLATE: Following Angular v17+ Best Practices -->
 <!-- This template demonstrates:
-     1. Angular directives (*ngIf, property binding)
-     2. Event binding (click, keyup.enter)
-     3. Template reference variables
-     4. Material UI components and directives
-     5. Accessibility best practices -->
+     1. Modern Angular directives (@if, @for instead of *ngIf, *ngFor)
+     2. Signal-based property binding
+     3. Template reference variables with viewChild signals
+     4. Material UI components integration
+     5. Accessibility best practices
+     6. Reactive forms with signals -->
 
 <div class="search-bar-container">
   <div class="search-input-wrapper">
@@ -13,58 +14,77 @@
       #input
       class="search-input"
       [formControl]="searchControl"
-      [placeholder]="placeholder"
+      [placeholder]="placeholderValue"
       [matAutocomplete]="auto"
+      [maxlength]="maxLengthValue"
       (keyup.enter)="onSubmit()"
       (mouseenter)="onMouseEnter()"
       (mouseleave)="onMouseLeave()"
       (focus)="onFocus()"
+      (blur)="onBlur()"
       (input)="onInput()"
       type="text"
+      autocomplete="off"
+      spellcheck="false"
     />
     
     <!-- ❌ CLEAR BUTTON: Only shows when there's text -->
-    @if (searchControl.value) {
-      <button class="clear-button" (click)="clearSearch()" type="button" aria-label="Clear search">
+    @if (!isSearchEmpty()) {
+      <button 
+        class="clear-button" 
+        (click)="clearSearch()" 
+        type="button" 
+        aria-label="Clear search">
         <mat-icon>close</mat-icon>
       </button>
     }
   </div>
   
   <!-- Material Autocomplete Panel -->
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSuggestionSelected($event.option.value)">
-    @if (enableSuggestions) {
-      @for (suggestion of filteredSuggestions | async; track suggestion.id) {
-        <mat-option [value]="suggestion">
-          @if (suggestion.icon) {
-            <mat-icon class="suggestion-icon">{{ suggestion.icon }}</mat-icon>
-          }
-          <span class="suggestion-text">{{ suggestion.text }}</span>
-          @if (suggestion.category) {
-            <span class="suggestion-category">{{ suggestion.category }}</span>
-          }
+  <mat-autocomplete 
+    #auto="matAutocomplete" 
+    (optionSelected)="onSuggestionSelected($event.option.value)"
+    [displayWith]="null">
+    @if (enableSuggestionsValue) {
+      @for (suggestion of filteredSuggestionsValue; track suggestion.id) {
+        <mat-option [value]="suggestion" class="search-suggestion-option">
+          <div class="suggestion-content">
+            @if (suggestion.icon) {
+              <mat-icon class="suggestion-icon">{{ suggestion.icon }}</mat-icon>
+            }
+            <span class="suggestion-text">{{ suggestion.text }}</span>
+            @if (suggestion.category) {
+              <span class="suggestion-category">{{ suggestion.category }}</span>
+            }
+          </div>
+        </mat-option>
+      }
+      
+      <!-- No suggestions message -->
+      @if (filteredSuggestionsValue.length === 0 && searchValue() && searchValue().trim().length > 0) {
+        <mat-option disabled class="no-suggestions-option">
+          <div class="no-suggestions-content">
+            <mat-icon class="no-suggestions-icon">search_off</mat-icon>
+            <span>No suggestions found</span>
+          </div>
         </mat-option>
       }
     }
   </mat-autocomplete>
 
   <!-- 🔘 SUBMIT BUTTON: Triggers search action (optional) -->
-  @if (showButton) {
+  @if (showButtonValue) {
     <button
       mat-raised-button
       color="primary"
       (click)="onSubmit()"
       class="search-button"
       type="button"
-      [disabled]="isSearchEmpty()"
+      [disabled]="!canSubmitValue"
+      [attr.aria-label]="'Search for ' + currentValue()"
     >
       <mat-icon>search</mat-icon>
-      Search
+      <span>Search</span>
     </button>
   }
 </div>
-
-<!-- 🎁 BONUS CHALLENGES: Add these features yourself! -->
-<!-- TODO FOR YOU: Add a loading spinner that shows during search -->
-<!-- TODO FOR YOU: Add a dropdown for search filters (All, Users, Posts, etc.) -->
-<!-- TODO FOR YOU: Add recent searches display when input is focused and empty -->

@@ -1,12 +1,24 @@
-// 🎯 LEARNING OBJECTIVE: Understanding Angular Component Architecture
-// This component demonstrates key Angular concepts:
-// 1. Component decorators and metadata
-// 2. Input/Output properties for parent-child communication
-// 3. Reactive forms with FormControl
-// 4. RxJS operators for handling user input
-// 5. Angular Material integration
+// 🎯 MODERNIZED ANGULAR COMPONENT: Following Angular v17+ Best Practices
+// This component demonstrates modern Angular concepts:
+// 1. Signal-based inputs/outputs instead of decorators
+// 2. viewChild signals instead of @ViewChild
+// 3. computed signals for derived state
+// 4. OnPush change detection for performance
+// 5. Signal-based reactive forms
+// 6. Modern lifecycle hooks with effect()
 
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  input,
+  output,
+  viewChild,
+  signal,
+  computed,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,8 +26,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocompleteModule, MatAutocomplete } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, tap, map, startWith } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 export interface SearchSuggestion {
   id: string;
@@ -25,181 +37,213 @@ export interface SearchSuggestion {
   url?: string;
 }
 
-// 📖 COMPONENT DECORATOR: This tells Angular this is a component
 @Component({
   selector: 'search-bar',
   standalone: true,
-  encapsulation: ViewEncapsulation.None, // Allow global styling
-  // 📦 IMPORTS: All the modules this component needs
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,        // Basic Angular directives (If, For)
+    CommonModule, // Basic Angular directives (@if, @for)
     ReactiveFormsModule, // For FormControl and reactive forms
-    MatFormFieldModule,  // Material form field wrapper
-    MatInputModule,      // Material input styling
-    MatIconModule,       // Material icons
-    MatButtonModule,     // Material button styling
-    MatAutocompleteModule // Material autocomplete for suggestions
+    MatFormFieldModule, // Material form field wrapper
+    MatInputModule, // Material input styling
+    MatIconModule, // Material icons
+    MatButtonModule, // Material button styling
+    MatAutocompleteModule, // Material autocomplete for suggestions
   ],
   templateUrl: './search-bar.html',
-  styleUrl: './search-bar.scss'
+  styleUrl: './search-bar.scss',
 })
 export class SearchBar {
-  @ViewChild('input') inputRef!: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') autoComplete!: MatAutocomplete;
-  // 🔽 INPUT PROPERTIES: Data flows DOWN from parent to child
-  // TODO FOR YOU: Add a new @Input() property called 'maxLength' with type number
-  @Input() placeholder: string = 'Search...';           // Customizable placeholder text
-  @Input() debounceMs: number = 300;                    // Delay before emitting search
-  @Input() appearance: 'fill' | 'outline' = 'outline';  // Material form field style
-  @Input() showButton: boolean = true;                  // Whether to show the search button
-  @Input() suggestions: SearchSuggestion[] = [];       // Autocomplete suggestions
-  @Input() enableSuggestions: boolean = true;          // Enable/disable suggestions
+  // 🔽 SIGNAL-BASED VIEWCHILD: Modern way to get element references
+  readonly inputRef = viewChild.required<ElementRef<HTMLInputElement>>('input');
+  readonly autoComplete = viewChild.required<MatAutocomplete>('auto');
 
-  // 🔼 OUTPUT PROPERTIES: Events flow UP from child to parent
-  @Output() searchChange = new EventEmitter<string>();  // Emits on every change (debounced)
-  @Output() searchSubmit = new EventEmitter<string>();  // Emits when user submits
-  @Output() searchFocus = new EventEmitter<void>();
-  @Output() mouseEntered = new EventEmitter<void>();
-  @Output() mouseLeft = new EventEmitter<void>();
-  @Output() suggestionSelected = new EventEmitter<SearchSuggestion>();
+  // 🔽 SIGNAL-BASED INPUTS: Data flows DOWN from parent to child
+  readonly placeholder = input<string>('Search...'); // Customizable placeholder text
+  readonly debounceMs = input<number>(300); // Delay before emitting search
+  readonly appearance = input<'fill' | 'outline'>('outline'); // Material form field style
+  readonly showButton = input<boolean>(true); // Whether to show the search button
+  readonly suggestions = input<SearchSuggestion[]>([]); // Autocomplete suggestions
+  readonly enableSuggestions = input<boolean>(true); // Enable/disable suggestions
+  readonly maxLength = input<number>(15); // Maximum input length
 
-  private isHovered = false;
-  private isFocused = false;
-  private isTyping = false;
-  private TYPE_TIMEOUT_MS = 1000;
+  // 🔼 SIGNAL-BASED OUTPUTS: Events flow UP from child to parent
+  readonly searchChange = output<string>(); // Emits on every change (debounced)
+  readonly searchSubmit = output<string>(); // Emits when user submits
+  readonly searchFocus = output<void>();
+  readonly mouseEntered = output<void>();
+  readonly mouseLeft = output<void>();
+  readonly suggestionSelected = output<SearchSuggestion>();
+
+  // 📊 COMPONENT STATE SIGNALS
+  private readonly isHovered = signal(false);
+  private readonly isFocused = signal(false);
+  private readonly isTyping = signal(false);
+  private readonly recentSearches = signal<SearchSuggestion[]>([]);
 
   // 🎛️ REACTIVE FORM CONTROL: Angular's way to handle form input
-  searchControl = new FormControl('');
-  
-  // 🔍 FILTERED SUGGESTIONS: Observable that filters suggestions based on user input
-  filteredSuggestions!: Observable<SearchSuggestion[]>;
-  
-  // 📝 RECENT SEARCHES: Store recent search terms in localStorage
+  readonly searchControl = new FormControl('');
+
+  // 🔄 SIGNAL FROM OBSERVABLE: Convert form control value to signal
+  readonly searchValue = toSignal(
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      map(value => value || ''),
+      startWith('')
+    ),
+    { initialValue: '' }
+  );
+
+  // 🔍 COMPUTED FILTERED SUGGESTIONS: Reactive filtering based on input
+  readonly filteredSuggestions = computed(() => {
+    if (!this.enableSuggestions()) {
+      return [];
+    }
+
+    const value = this.searchValue();
+
+    // If no input, show recent searches
+    if (!value.trim()) {
+      return this.recentSearches();
+    }
+
+    const filterValue = value.toLowerCase();
+    const filteredSuggestions = this.suggestions().filter(suggestion =>
+      suggestion.text.toLowerCase().includes(filterValue)
+    );
+
+    // Combine recent searches that match with regular suggestions
+    const matchingRecent = this.recentSearches().filter(recent =>
+      recent.text.toLowerCase().includes(filterValue)
+    );
+
+    // Remove duplicates and prioritize recent searches
+    const combined = [...matchingRecent, ...filteredSuggestions];
+    const unique = combined.filter(
+      (item, index, arr) => arr.findIndex(i => i.text === item.text) === index
+    );
+
+    return unique.slice(0, 8); // Limit to 8 suggestions
+  });
+
+  // 🧮 COMPUTED DERIVED STATE
+  readonly isSearchEmpty = computed(() => !this.searchValue().trim());
+
+  readonly currentValue = computed(() => this.searchControl.value || '');
+
+  readonly canSubmit = computed(() => this.searchValue().trim().length > 0);
+
+  // 🔧 CONSTANTS
+  private readonly TYPE_TIMEOUT_MS = 1000;
   private readonly RECENT_SEARCHES_KEY = 'search-recent';
   private readonly MAX_RECENT_SEARCHES = 5;
 
-  ngOnInit() {
-    // 🌊 REACTIVE STREAMS: Listen to form control changes
-    this.searchControl.valueChanges
-      .pipe(
-        tap(value => console.log('User typed:', value)),
-        debounceTime(this.debounceMs),
-        distinctUntilChanged()
-      )
-      .subscribe(value => {
-        this.searchChange.emit(value || '');
-      });
+  constructor() {
+    // 🌊 REACTIVE EFFECT: Listen to search value changes and emit to parent
+    effect(() => {
+      const value = this.searchValue();
+      this.searchChange.emit(value);
+    });
 
-    // 🔍 SETUP FILTERED SUGGESTIONS: Filter suggestions based on user input
-    this.filteredSuggestions = this.searchControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterSuggestions(value || ''))
+    // 📝 LOAD RECENT SEARCHES ON INIT
+    effect(
+      () => {
+        this.loadRecentSearches();
+      },
+      { allowSignalWrites: true }
     );
   }
 
-
   // 🧹 UTILITY METHOD: Clear the search and notify parent
-  clearSearch() {
+  clearSearch(): void {
     this.searchControl.setValue('');
-    // TODO FOR YOU: Should we emit searchSubmit here too? Think about UX
     this.searchChange.emit('');
   }
 
-  onMouseEnter() {
-    this.isHovered = true;
-    this.inputRef.nativeElement.focus();
+  onMouseEnter(): void {
+    this.isHovered.set(true);
+    this.inputRef().nativeElement.focus();
     this.mouseEntered.emit();
   }
 
-  onMouseLeave() {
-    this.isHovered = false;
+  onMouseLeave(): void {
+    this.isHovered.set(false);
     this.mouseLeft.emit();
   }
 
-  onFocus() {
-    this.isFocused = true;
+  onFocus(): void {
+    this.isFocused.set(true);
     this.searchFocus.emit();
   }
 
-  onInput() {
-    this.isTyping = true;
-    // reset if typing is paused
+  onBlur(): void {
+    this.isFocused.set(false);
+  }
+
+  onInput(): void {
+    this.isTyping.set(true);
+    // Reset typing state after timeout
     setTimeout(() => {
-      this.isTyping = false
+      this.isTyping.set(false);
     }, this.TYPE_TIMEOUT_MS);
   }
 
-  // 🔍 SUGGESTION FILTERING: Filter suggestions based on user input
-  private _filterSuggestions(value: string): SearchSuggestion[] {
-    if (!this.enableSuggestions) {
-      return [];
-    }
-    
-    // If no input, show recent searches
-    if (!value.trim()) {
-      return this._getRecentSearches();
-    }
-    
-    const filterValue = value.toLowerCase();
-    const filteredSuggestions = this.suggestions.filter(suggestion =>
-      suggestion.text.toLowerCase().includes(filterValue)
-    );
-    
-    // Combine recent searches that match with regular suggestions
-    const matchingRecent = this._getRecentSearches().filter(recent =>
-      recent.text.toLowerCase().includes(filterValue)
-    );
-    
-    // Remove duplicates and prioritize recent searches
-    const combined = [...matchingRecent, ...filteredSuggestions];
-    const unique = combined.filter((item, index, arr) => 
-      arr.findIndex(i => i.text === item.text) === index
-    );
-    
-    return unique.slice(0, 8); // Limit to 8 suggestions
-  }
-
   // 🎯 SUGGESTION SELECTION: Handle when user selects a suggestion
-  onSuggestionSelected(suggestion: SearchSuggestion) {
+  onSuggestionSelected(suggestion: SearchSuggestion): void {
     this.searchControl.setValue(suggestion.text);
-    this._addToRecentSearches(suggestion.text);
+    this.addToRecentSearches(suggestion.text);
     this.suggestionSelected.emit(suggestion);
     this.searchSubmit.emit(suggestion.text);
   }
 
-  onSubmit() {
-    const searchValue = this.searchControl.value || '';
+  onSubmit(): void {
+    const searchValue = this.currentValue();
     if (searchValue.trim()) {
-      this._addToRecentSearches(searchValue);
+      this.addToRecentSearches(searchValue);
       this.searchSubmit.emit(searchValue);
     }
   }
 
   // 📝 RECENT SEARCHES MANAGEMENT
-  private _getRecentSearches(): SearchSuggestion[] {
+  private loadRecentSearches(): void {
     try {
       const recent = localStorage.getItem(this.RECENT_SEARCHES_KEY);
       if (recent) {
         const searches = JSON.parse(recent) as string[];
-        return searches.map((text, index) => ({
+        const recentSuggestions = searches.map((text, index) => ({
           id: `recent-${index}`,
           text,
-          category: 'recent',
-          icon: 'history'
+          category: 'recent' as const,
+          icon: 'history',
         }));
+        this.recentSearches.set(recentSuggestions);
       }
     } catch (error) {
       console.warn('Error loading recent searches:', error);
+      this.recentSearches.set([]);
     }
-    return [];
   }
 
-  private _addToRecentSearches(searchTerm: string): void {
+  private addToRecentSearches(searchTerm: string): void {
     try {
-      const recent = this._getRecentSearches().map(s => s.text);
-      const updated = [searchTerm, ...recent.filter(term => term !== searchTerm)]
-        .slice(0, this.MAX_RECENT_SEARCHES);
+      const current = this.recentSearches().map(s => s.text);
+      const updated = [searchTerm, ...current.filter(term => term !== searchTerm)].slice(
+        0,
+        this.MAX_RECENT_SEARCHES
+      );
+
       localStorage.setItem(this.RECENT_SEARCHES_KEY, JSON.stringify(updated));
+
+      // Update signal with new recent searches
+      const recentSuggestions = updated.map((text, index) => ({
+        id: `recent-${index}`,
+        text,
+        category: 'recent' as const,
+        icon: 'history',
+      }));
+      this.recentSearches.set(recentSuggestions);
     } catch (error) {
       console.warn('Error saving recent search:', error);
     }
@@ -207,14 +251,48 @@ export class SearchBar {
 
   // 🔧 UTILITY METHODS
   getCurrentValue(): string {
-    return this.searchControl.value || '';
+    return this.currentValue();
   }
 
-  isSearchEmpty(): boolean {
-    return !this.searchControl.value?.trim();
+  isSearchEmptyValue(): boolean {
+    return this.isSearchEmpty();
   }
 
   clearRecentSearches(): void {
-    localStorage.removeItem(this.RECENT_SEARCHES_KEY);
+    try {
+      localStorage.removeItem(this.RECENT_SEARCHES_KEY);
+      this.recentSearches.set([]);
+    } catch (error) {
+      console.warn('Error clearing recent searches:', error);
+    }
+  }
+
+  // 🎯 GETTERS FOR TEMPLATE ACCESS TO SIGNALS
+  get showButtonValue(): boolean {
+    return this.showButton();
+  }
+
+  get placeholderValue(): string {
+    return this.placeholder();
+  }
+
+  get appearanceValue(): 'fill' | 'outline' {
+    return this.appearance();
+  }
+
+  get enableSuggestionsValue(): boolean {
+    return this.enableSuggestions();
+  }
+
+  get maxLengthValue(): number {
+    return this.maxLength();
+  }
+
+  get filteredSuggestionsValue(): SearchSuggestion[] {
+    return this.filteredSuggestions();
+  }
+
+  get canSubmitValue(): boolean {
+    return this.canSubmit();
   }
 }

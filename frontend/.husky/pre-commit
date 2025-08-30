@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Format code with Prettier
+npx lint-staged
+
+# Run Angular lint (will show errors but not prevent commit)
+echo "Running Angular lint check..."
+npm run lint || echo "⚠️  Lint issues found. Please fix them when possible."
