@@ -64,7 +64,7 @@
       @if (!isLoggedIn) {
         <app-login-button 
           class="login-profile-area"
-          (onLogin)="handleLogin($event)">
+          (loginResult)="handleLogin($event)">
         </app-login-button>
       } @else {
         <!-- Avatar -->

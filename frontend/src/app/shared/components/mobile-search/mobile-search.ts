@@ -26,7 +26,7 @@ import { SearchBar, SearchSuggestion } from '../search-bar/search-bar';
           [showButton]="false"
           [suggestions]="data.suggestions"
           [enableSuggestions]="true"
-          (searchChange)="onSearchChange($event)"
+          (searchChange)="onSearchChange()"
           (searchSubmit)="onSearchSubmit($event)"
           (suggestionSelected)="onSuggestionSelected($event)"
           class="mobile-search-input"
