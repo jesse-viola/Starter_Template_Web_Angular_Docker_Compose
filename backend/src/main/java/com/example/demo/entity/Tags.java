@@ -29,6 +29,10 @@ public class Tags {
     public Tags(String name) {
         this.name = name;
     }
+
+    public Tags() {
+        
+    }
     
     // Getters and Setters
     public Long getId() {

@@ -9,7 +9,7 @@
 
 -- Users table
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE users (
 
 -- Yarns table
 CREATE TABLE yarns (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     url TEXT,
@@ -28,7 +28,7 @@ CREATE TABLE yarns (
 
 -- Patterns table
 CREATE TABLE patterns (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     url TEXT,
@@ -38,9 +38,10 @@ CREATE TABLE patterns (
 
 -- Tags table
 CREATE TABLE tags (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Junction table for yarn tags (many-to-many)
