@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.util.Set;
+import java.util.HashSet;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,6 +27,9 @@ public class Tags {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<Yarns> yarns = new HashSet<>();
     
     public Tags(String name) {
         this.name = name;

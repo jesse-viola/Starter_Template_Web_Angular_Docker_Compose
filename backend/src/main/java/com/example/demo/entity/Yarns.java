@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
+import java.util.Set;
+import java.util.HashSet;
 import jakarta.persistence.*;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,6 +33,15 @@ public class Yarns {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @ManyToMany
+    @JoinTable(
+        name = "yarn_tags",
+        joinColumns = @JoinColumn(name = "yarn_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id") 
+    )
+
+     private Set<Tags> tags = new HashSet<>();
     
     public Yarns(String name, String description, String url, String imageUrl) {
         this.name = name;

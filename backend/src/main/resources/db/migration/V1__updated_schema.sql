@@ -46,30 +46,30 @@ CREATE TABLE tags (
 
 -- Junction table for yarn tags (many-to-many)
 CREATE TABLE yarn_tags (
-    yarn_id INTEGER REFERENCES yarns(id) ON DELETE CASCADE,
-    tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+    yarn_id BIGSERIAL REFERENCES yarns(id) ON DELETE CASCADE,
+    tag_id BIGSERIAL REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (yarn_id, tag_id)
 );
 
 -- Junction table for pattern tags (many-to-many)
 CREATE TABLE pattern_tags (
-    pattern_id INTEGER REFERENCES patterns(id) ON DELETE CASCADE,
-    tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+    pattern_id BIGSERIAL REFERENCES patterns(id) ON DELETE CASCADE,
+    tag_id BIGSERIAL REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (pattern_id, tag_id)
 );
 
 -- User favorites for yarns
 CREATE TABLE user_favorite_yarns (
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    yarn_id INTEGER REFERENCES yarns(id) ON DELETE CASCADE,
+    user_id BIGSERIAL REFERENCES users(id) ON DELETE CASCADE,
+    yarn_id BIGSERIAL REFERENCES yarns(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT NOW(),
     PRIMARY KEY (user_id, yarn_id)
 );
 
 -- User favorites for patterns
 CREATE TABLE user_favorite_patterns (
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    pattern_id INTEGER REFERENCES patterns(id) ON DELETE CASCADE,
+    user_id BIGSERIAL REFERENCES users(id) ON DELETE CASCADE,
+    pattern_id BIGSERIAL REFERENCES patterns(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT NOW(),
     PRIMARY KEY (user_id, pattern_id)
 );
