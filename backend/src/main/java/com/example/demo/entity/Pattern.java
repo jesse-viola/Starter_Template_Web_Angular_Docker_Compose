@@ -1,9 +1,6 @@
 package com.example.demo.entity;
 
-import java.util.Set;
-import java.util.HashSet;
 import jakarta.persistence.*;
-import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,8 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "yarns")
-public class Yarns {
+@Table(name = "patterns")
+public class Pattern {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,17 +30,8 @@ public class Yarns {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @ManyToMany
-    @JoinTable(
-        name = "yarn_tags",
-        joinColumns = @JoinColumn(name = "yarn_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id") 
-    )
-
-     private Set<Tags> tags = new HashSet<>();
     
-    public Yarns(String name, String description, String url, String imageUrl) {
+    public Pattern(String name, String description, String url, String imageUrl) {
         this.name = name;
         this.description = description;
         this.url = url;
@@ -101,7 +89,7 @@ public class Yarns {
     
     @Override
     public String toString() {
-        return "Yarns{" +
+        return "Pattern{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

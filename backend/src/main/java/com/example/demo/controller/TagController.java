@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Tags;
-import com.example.demo.repository.TagsRepository;
+import com.example.demo.entity.Tag;
+import com.example.demo.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +15,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class TagsController {
+public class TagController {
 
     @Autowired
-    private TagsRepository tagsRepository;
+    private TagRepository tagRepository;
 
     @GetMapping("/tags")
-    public ResponseEntity<List<Tags>> getAllItems() {
-        List<Tags> tags = tagsRepository.findAll();
+    public ResponseEntity<List<Tag>> getAllItems() {
+        List<Tag> tags = tagRepository.findAll();
         return ResponseEntity.ok(tags);
     }
 

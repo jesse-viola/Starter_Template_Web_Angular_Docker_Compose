@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tags")
-public class Tags {
+public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,13 +29,13 @@ public class Tags {
     private LocalDateTime updatedAt;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<Yarns> yarns = new HashSet<>();
+    private Set<Yarn> yarns = new HashSet<>();
     
-    public Tags(String name) {
+    public Tag(String name) {
         this.name = name;
     }
 
-    public Tags() {
+    public Tag() {
         
     }
     
@@ -74,7 +74,7 @@ public class Tags {
     
     @Override
     public String toString() {
-        return "Tags{" +
+        return "Tag{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
