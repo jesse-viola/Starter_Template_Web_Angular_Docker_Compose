@@ -3,7 +3,6 @@ package com.example.demo.entity;
 import java.util.Set;
 import java.util.HashSet;
 import jakarta.persistence.*;
-import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;

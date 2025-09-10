@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.util.Set;
+import java.util.HashSet;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,6 +30,24 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
+    @OneToMany
+    @JoinTable(
+        name = "user_favorite_yarns",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "yarn_id")
+    )
+    private Set<Yarn> yarns = new HashSet<>();
+
+    @OneToMany
+    @JoinTable(
+        name = "user_favorite_patterns",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "pattern_id")
+    )
+
+    private Set<Pattern> patterns = new HashSet<>();
+
+
     public User(String username, String email, String passwordHash) {
         this.username = username;
         this.email = email;

@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.util.Set;
+import java.util.HashSet;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -30,6 +32,15 @@ public class Pattern {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @ManyToMany
+    @JoinTable(
+        name = "pattern_tags",
+        joinColumns = @JoinColumn(name = "pattern_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id") 
+    )
+
+     private Set<Tag> tags = new HashSet<>();
     
     public Pattern(String name, String description, String url, String imageUrl) {
         this.name = name;

@@ -30,6 +30,9 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags")
     private Set<Yarn> yarns = new HashSet<>();
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<Pattern> patterns = new HashSet<>();
     
     public Tag(String name) {
         this.name = name;
