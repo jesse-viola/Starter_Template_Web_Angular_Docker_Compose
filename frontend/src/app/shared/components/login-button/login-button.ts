@@ -22,8 +22,15 @@ export class LoginButton {
   loginResult = output<{ provider: string; success: boolean; data?: unknown }>();
 
   handleLogin(): void {
+    console.log('Login button clicked!');
     if (!this.isLoading() && !this.disabled()) {
+      console.log('Opening login modal...');
       this.openLoginModal();
+    } else {
+      console.log('Login button disabled or loading:', {
+        loading: this.isLoading(),
+        disabled: this.disabled(),
+      });
     }
   }
 
@@ -35,14 +42,9 @@ export class LoginButton {
       disableClose: false,
       hasBackdrop: true,
       backdropClass: 'login-modal-backdrop',
-      position: {
-        top: '0',
-        left: '0',
-      },
-      width: '100vw',
-      height: '100vh',
-      maxWidth: 'none',
-      maxHeight: 'none',
+      width: 'auto',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
     });
 
     dialogRef.afterClosed().subscribe(result => {

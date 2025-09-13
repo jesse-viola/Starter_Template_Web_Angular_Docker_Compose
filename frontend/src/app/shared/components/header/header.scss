@@ -84,7 +84,7 @@ $avatar-size: 32px;
 .header-content {
   display: grid;
   grid-template-columns: minmax(auto, 1fr) minmax(auto, 1fr) minmax(auto, 1fr);
-  grid-template-areas: "logo-nav search actions";
+  grid-template-areas: 'logo-nav search actions';
   column-gap: $header-gap-desktop;
   align-items: center;
   width: 100%;
@@ -99,7 +99,7 @@ $avatar-size: 32px;
   align-items: center;
   justify-content: flex-end;
   gap: $actions-gap-desktop;
-  
+
   // Login/Profile is always the last item
   .login-profile-area {
     order: 999;
@@ -110,6 +110,7 @@ $avatar-size: 32px;
 .logo-nav-section {
   grid-area: logo-nav;
   display: flex;
+  min-height: 80%;
   align-items: center;
   gap: clamp(24px, 4vw, 48px);
 }
@@ -146,8 +147,8 @@ $avatar-size: 32px;
   .nav-link {
     display: flex;
     align-items: center;
-    height: 100%;
-    padding: 0 clamp(12px, 1.5vw, 24px);
+    height: auto;
+    padding: 16px clamp(12px, 1.5vw, 24px);
     text-decoration: none;
     color: var(--mat-text-primary, #333);
     font-size: 14px;
@@ -160,18 +161,17 @@ $avatar-size: 32px;
       color: var(--mat-primary, #6200ee);
 
       &:after {
-        content: "";
+        content: '';
         position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
+        bottom: 8px;
+        left: clamp(12px, 1.5vw, 24px);
+        right: clamp(12px, 1.5vw, 24px);
         height: 2px;
         background-color: var(--mat-primary, #6200ee);
       }
     }
   }
 }
-
 
 // Search container - Centered in grid
 .search-container {
@@ -229,9 +229,15 @@ $avatar-size: 32px;
 /* ===== RESPONSIVE LAYOUT SYSTEM (WITH VARIABLES) ===== */
 
 /* Default visibility classes */
-.show-desktop { display: flex; }
-.show-tablet { display: none; }
-.show-mobile { display: none; }
+.show-desktop {
+  display: flex;
+}
+.show-tablet {
+  display: none;
+}
+.show-mobile {
+  display: none;
+}
 
 /* Login area - ALWAYS VISIBLE */
 .login-profile-area {
@@ -245,32 +251,32 @@ $avatar-size: 32px;
   .header-content {
     display: grid;
     grid-template-columns: minmax(auto, 1fr) minmax(auto, 1fr) minmax(auto, 1fr);
-    grid-template-areas: "logo-nav search actions";
+    grid-template-areas: 'logo-nav search actions';
     column-gap: $header-gap-desktop;
     padding: 0 $header-padding-desktop;
   }
-  
+
   .logo-nav-section {
     display: flex !important;
     grid-area: logo-nav;
   }
-  
+
   .search-container.show-desktop {
     display: flex !important;
     grid-area: search;
   }
-  
+
   .actions-container {
     display: flex !important;
     gap: $actions-gap-desktop;
     grid-area: actions;
   }
-  
+
   // Hide mobile-only elements on desktop
   .show-mobile {
     display: none !important;
   }
-  
+
   // Show desktop elements
   .show-desktop {
     display: flex !important;
@@ -283,15 +289,15 @@ $avatar-size: 32px;
     column-gap: $header-gap-tablet;
     padding: 0 $header-padding-tablet;
   }
-  
+
   .action-icon.show-desktop {
     display: none;
   }
-  
+
   .actions-container {
     gap: $actions-gap-tablet;
   }
-  
+
   .search-container {
     width: $search-width-tablet;
   }
@@ -309,23 +315,23 @@ $avatar-size: 32px;
     align-items: center;
     min-height: $header-height;
   }
-  
+
   .nav-links {
     display: none;
   }
-  
+
   .logo-container {
     // Grid area: logo section
     grid-area: logo;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    
+
     .logo {
       display: flex;
       align-items: center;
       gap: 8px;
-      
+
       mat-icon {
         font-size: 24px;
         width: 24px;
@@ -333,17 +339,17 @@ $avatar-size: 32px;
       }
     }
   }
-  
+
   // Hide full search bar on mobile
   .search-container {
     display: none !important;
   }
-  
+
   // Hide desktop-only action icons
   .action-icon.show-desktop {
     display: none !important;
   }
-  
+
   .actions-container {
     // Grid area: actions section with mobile elements
     grid-area: actions;
@@ -351,7 +357,7 @@ $avatar-size: 32px;
     justify-content: flex-end;
     align-items: center;
     gap: $actions-gap-mobile;
-    
+
     // Ensure touch-friendly button sizes
     button {
       min-width: 44px;
@@ -361,18 +367,18 @@ $avatar-size: 32px;
       justify-content: center;
     }
   }
-  
+
   // Show mobile elements at 768px
   .search-icon.show-mobile {
     display: flex !important;
     order: 1;
   }
-  
+
   .hamburger-menu.show-mobile {
     display: flex !important;
     order: 2;
   }
-  
+
   // Login area styling for mobile
   .login-profile-area {
     min-width: 44px;
@@ -390,38 +396,44 @@ $avatar-size: 32px;
     // Reorganize grid for mobile actions
     grid-template-columns: minmax(auto, 1fr) 0fr minmax(auto, 2fr);
   }
-  
+
   // Hide full search bar completely
   .search-container {
     display: none !important;
   }
-  
+
   // Hide desktop-only icons
   .action-icon.show-desktop {
     display: none !important;
   }
-  
+
   // Show mobile elements
   .search-icon.show-mobile {
     display: flex !important;
     min-width: 44px;
     min-height: 44px;
   }
-  
+
   .hamburger-menu.show-mobile {
     display: flex !important;
     min-width: 44px;
     min-height: 44px;
   }
-  
+
   .actions-container {
     gap: $actions-gap-small;
     justify-content: flex-end;
-    
+
     // Clear mobile layout: Search Icon | Hamburger | Login
-    .search-icon { order: 1; }
-    .hamburger-menu { order: 2; }  
-    .login-profile-area { order: 3; }
+    .search-icon {
+      order: 1;
+    }
+    .hamburger-menu {
+      order: 2;
+    }
+    .login-profile-area {
+      order: 3;
+    }
   }
 }
 
@@ -433,14 +445,14 @@ $avatar-size: 32px;
     // Adjust grid proportions for tiny screens
     grid-template-columns: minmax(auto, 0.8fr) 0fr minmax(auto, 1.2fr);
   }
-  
+
   .logo-container {
     .logo {
       // Show only icon on very small screens
       span {
         display: none;
       }
-      
+
       mat-icon {
         font-size: 20px;
         width: 20px;
@@ -448,26 +460,30 @@ $avatar-size: 32px;
       }
     }
   }
-  
+
   // Hide search area completely - no space for it
   .search-container {
     display: none !important;
   }
-  
+
   .actions-container {
     gap: 8px;
     justify-content: flex-end;
-    
+
     // Compact button sizes for tiny screens
     button {
       min-width: 40px;
       min-height: 40px;
     }
-    
+
     // Order: Search Icon | Hamburger | Login
-    .search-icon { order: 1; }
-    .hamburger-menu { order: 2; }
-    .login-profile-area { 
+    .search-icon {
+      order: 1;
+    }
+    .hamburger-menu {
+      order: 2;
+    }
+    .login-profile-area {
       order: 3;
       min-width: 40px;
       min-height: 40px;
@@ -476,13 +492,13 @@ $avatar-size: 32px;
 }
 
 /* Mobile element styles */
-.search-icon, .hamburger-menu {
+.search-icon,
+.hamburger-menu {
   color: var(--mat-text-secondary, #757575);
-  
+
   &:hover {
     color: var(--mat-primary, #6200ee);
   }
 }
 
 /* Clean professional appearance - debug CSS removed */
-

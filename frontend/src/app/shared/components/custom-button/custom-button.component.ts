@@ -52,7 +52,9 @@ export class CustomButtonComponent {
   });
 
   handleClick(event: Event): void {
+    console.log('CustomButton clicked:', { disabled: this.disabled(), loading: this.loading() });
     if (!this.disabled() && !this.loading()) {
+      console.log('CustomButton emitting buttonClick event');
       this.buttonClick.emit(event);
     }
   }
