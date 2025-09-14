@@ -15,5 +15,8 @@ public interface YarnRepository extends JpaRepository<Yarn, Long> {
     List<Yarn> findByNameContainingIgnoreCase(String name);
 
     Optional<Yarn> findByName(String name);
+    
+    @Query("SELECT y FROM Yarn y JOIN y.tags t WHERE LOWER(t.name) = LOWER(:tagName)")
+    List<Yarn> findByTagName(@Param("tagName") String tagName);
 
 }

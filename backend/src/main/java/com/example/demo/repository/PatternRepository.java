@@ -16,4 +16,7 @@ public interface PatternRepository extends JpaRepository<Pattern, Long> {
 
     Optional<Pattern> findByName(String name);
 
+    @Query("SELECT p FROM Pattern p JOIN p.tags t WHERE LOWER(t.name) = LOWER(:tagName)")
+    List<Pattern> findByTagName(@Param("tagName") String tagName);
+
 }

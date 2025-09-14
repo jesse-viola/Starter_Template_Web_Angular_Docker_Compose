@@ -48,6 +48,10 @@ public class Yarn {
         this.url = url;
         this.imageUrl = imageUrl;
     }
+
+    public Yarn() {
+        
+    }
     
     // Getters and Setters
     public Long getId() {
@@ -96,6 +100,14 @@ public class Yarn {
     
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
     
     @Override

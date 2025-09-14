@@ -21,9 +21,22 @@ public class TagController {
     private TagRepository tagRepository;
 
     @GetMapping("/tags")
-    public ResponseEntity<List<Tag>> getAllItems() {
+    public ResponseEntity<List<Tag>> getAllTags() {
         List<Tag> tags = tagRepository.findAll();
         return ResponseEntity.ok(tags);
+    }
+
+    @PostMapping("/tags")
+    public ResponseEntity<?> createTag(@RequestBody Tag tag) {
+        // Check for duplicate
+        if (tagRepository.findByNameIgnoreCase(tag.getName()).isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Tag with name '" + tag.getName() + "' already exists");
+        }
+
+        Tag savedTag = tagRepository.save(tag);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedTag);
     }
 
 }
