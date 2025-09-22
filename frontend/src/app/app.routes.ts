@@ -19,6 +19,14 @@ export const routes: Routes = [
     title: 'My Favorites',
   },
 
+  {
+    path: 'projects',
+    loadComponent: () =>
+      import('./features/projects/projects.component').then(m => m.ProjectsComponent),
+    canActivate: [authGuard],
+    title: 'My Projects',
+  },
+
   // Placeholder routes for future implementation
   // These will show a "Coming Soon" message until components are created
   {

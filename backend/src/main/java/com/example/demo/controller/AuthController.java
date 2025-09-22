@@ -30,6 +30,8 @@ public class AuthController {
     }
 
     // ---------------- Register ----------------
+    // TODO: need registration DTO, should be different from the LoginRequest DTO,
+    // RegisterRequest
     @PostMapping("/register")
     public ResponseEntity<LoginResponse> register(@Valid @RequestBody LoginRequest request) {
         try {
@@ -56,20 +58,81 @@ public class AuthController {
         private String password;
 
         // Getters & setters
-        public String getEmail() { return email; }
-        public void setEmail(String email) { this.email = email; }
+        public String getEmail() {
+            return email;
+        }
 
-        public String getUsername() { return username; }
-        public void setUsername(String username) { this.username = username; }
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
     }
 
+    /**
+     * TODO: maybe something like this for the auth response?
+     * public static class LoginResponse {
+     * private String accessToken;
+     * private String refreshToken; // For token renewal
+     * private String tokenType = "Bearer";
+     * private long expiresIn; // Seconds until expiration
+     * private UserInfo user; // Basic user info
+     * 
+     * // Constructors, getters, setters
+     * }
+     * 
+     * public static class UserInfo {
+     * private String id;
+     * private String email;
+     * private String username;
+     * private List<String> roles;
+     * // No sensitive data like password
+     * }
+     * 
+     * Why this approach is preferred:
+     * 
+     * 1. Frontend Token Management: Frontend needs expiresIn to know when to
+     * refresh
+     * 2. Refresh Tokens: Industry standard for secure token renewal without
+     * re-authentication
+     * 3. User Context: Frontend needs basic user info for UI personalization
+     * 4. Token Type: Explicit "Bearer" for Authorization header
+     * 5. Security: Separate short-lived access token + longer-lived refresh token
+     * 
+     * Your current approach risks:
+     * - Frontend can't manage token expiration properly
+     * - No token refresh mechanism
+     * - User has to re-login when token expires
+     * - Less secure (typically longer-lived tokens to avoid frequent re-auth)
+     * 
+     * Modern pattern:
+     * - Access token: 15-30 minutes
+     * - Refresh token: 7-30 days
+     * - Frontend automatically refreshes access token using refresh token
+     */
     public static class LoginResponse {
         private String token;
 
-        public LoginResponse(String token) { this.token = token; }
-        public String getToken() { return token; }
+        public LoginResponse(String token) {
+            this.token = token;
+        }
+
+        public String getToken() {
+            return token;
+        }
     }
 }
