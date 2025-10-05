@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.AuthService;
+import com.example.demo.model.LoginRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -45,43 +46,7 @@ public class AuthController {
     }
 
     // ---------------- DTOs ----------------
-    public static class LoginRequest {
 
-        @NotBlank(message = "Email is required")
-        @Email(message = "Email must be valid")
-        private String email;
-
-        @NotBlank(message = "Username is required")
-        private String username;
-
-        @NotBlank(message = "Password is required")
-        private String password;
-
-        // Getters & setters
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
 
     /**
      * TODO: maybe something like this for the auth response?
@@ -98,7 +63,7 @@ public class AuthController {
      * public static class UserInfo {
      * private String id;
      * private String email;
-     * private String username;
+     * private String 
      * private List<String> roles;
      * // No sensitive data like password
      * }
