@@ -26,7 +26,7 @@ public class RefreshToken {
     private String token;
 
     @Column(name = "expiry_date", nullable = false)
-    private LocalDateTime expiryDate;
+    private Instant expiryDate;
 
     @Column(name = "revoked", nullable = false)
     private Boolean revoked;
@@ -36,13 +36,17 @@ public class RefreshToken {
     private LocalDateTime createdAt;
     
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(this.expiryDate);
+        return Instant.now().isAfter(this.expiryDate);
     }
 
     public RefreshToken(String token) {
         this.token = token;
     }
     
+    public RefreshToken() {
+        //TODO Auto-generated constructor stub
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -68,11 +72,11 @@ public class RefreshToken {
         this.token = token;
     }
 
-    public LocalDateTime getExpiryDate() {
+    public Instant getExpiryDate() {
         return expiryDate;
     }
     
-    public void setExpiryDate(LocalDateTime expiryDate) {
+    public void setExpiryDate(Instant expiryDate) {
         this.expiryDate = expiryDate;
     }
 
